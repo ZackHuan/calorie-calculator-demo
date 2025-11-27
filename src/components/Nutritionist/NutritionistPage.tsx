@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Ingredient, IngredientStatus } from '../../types';
 import { storageService } from '../../services/storageService';
-import './Nutritionist.css';
 
 const NutritionistPage: React.FC = () => {
   const [pendingIngredients, setPendingIngredients] = useState<Ingredient[]>([]);
@@ -35,60 +34,69 @@ const NutritionistPage: React.FC = () => {
 
   const getStatusBadge = (status: IngredientStatus) => {
     const statusClasses: Record<IngredientStatus, string> = {
-      pending: 'status-pending',
-      approved: 'status-approved',
-      rejected: 'status-rejected',
+      pending: 'bg-yellow-500 text-white',
+      approved: 'bg-green-600 text-white',
+      rejected: 'bg-red-500 text-white',
     };
-    return <span className={`status-badge ${statusClasses[status]}`}>{status}</span>;
+    return <span className={`px-2.5 py-1 rounded-xl text-xs font-semibold uppercase ${statusClasses[status]}`}>{status}</span>;
+  };
+
+  const getCardBorderColor = (status: IngredientStatus) => {
+    const colors: Record<IngredientStatus, string> = {
+      pending: 'border-l-yellow-500',
+      approved: 'border-l-green-600',
+      rejected: 'border-l-red-500',
+    };
+    return colors[status];
   };
 
   return (
-    <div className="nutritionist-container">
-      <h1>Nutritionist Dashboard</h1>
-      <p className="description">Review and approve ingredient submissions</p>
+    <div className="p-5 max-w-6xl mx-auto">
+      <h1 className="text-slate-700 mb-1 text-2xl font-bold">Nutritionist Dashboard</h1>
+      <p className="text-gray-500 mb-8">Review and approve ingredient submissions</p>
 
-      <div className="content-wrapper">
-        <div className="section pending-section">
-          <h2>Pending Approval ({pendingIngredients.length})</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="bg-white rounded-xl p-6 shadow-md border-t-4 border-yellow-500">
+          <h2 className="mb-5 text-slate-600 text-xl font-semibold">Pending Approval ({pendingIngredients.length})</h2>
           {pendingIngredients.length === 0 ? (
-            <p className="no-data">No pending ingredients to review.</p>
+            <p className="text-gray-400 text-center py-8">No pending ingredients to review.</p>
           ) : (
-            <div className="ingredients-list">
+            <div className="flex flex-col gap-4 max-h-[600px] overflow-y-auto">
               {pendingIngredients.map(ingredient => (
-                <div key={ingredient.id} className="ingredient-card pending">
-                  <div className="ingredient-header">
-                    <h3>{ingredient.name}</h3>
-                    <span className="category-tag">{ingredient.category}</span>
+                <div key={ingredient.id} className="bg-gray-50 rounded-lg p-4 border-l-4 border-l-yellow-500">
+                  <div className="flex justify-between items-center mb-2.5">
+                    <h3 className="m-0 text-slate-700 text-lg">{ingredient.name}</h3>
+                    <span className="bg-blue-500 text-white py-0.5 px-2.5 rounded-xl text-xs">{ingredient.category}</span>
                   </div>
-                  <div className="nutrition-details">
-                    <div className="nutrition-row">
-                      <div className="nutrition-item">
-                        <span className="label">Calories</span>
-                        <span className="value">{ingredient.calories} kcal</span>
+                  <div className="mb-4">
+                    <div className="grid grid-cols-4 gap-2.5">
+                      <div className="flex flex-col items-center bg-gray-200 p-2.5 rounded-md">
+                        <span className="text-xs text-gray-500 uppercase">Calories</span>
+                        <span className="text-base font-semibold text-slate-700">{ingredient.calories} kcal</span>
                       </div>
-                      <div className="nutrition-item">
-                        <span className="label">Protein</span>
-                        <span className="value">{ingredient.protein}g</span>
+                      <div className="flex flex-col items-center bg-gray-200 p-2.5 rounded-md">
+                        <span className="text-xs text-gray-500 uppercase">Protein</span>
+                        <span className="text-base font-semibold text-slate-700">{ingredient.protein}g</span>
                       </div>
-                      <div className="nutrition-item">
-                        <span className="label">Carbs</span>
-                        <span className="value">{ingredient.carbs}g</span>
+                      <div className="flex flex-col items-center bg-gray-200 p-2.5 rounded-md">
+                        <span className="text-xs text-gray-500 uppercase">Carbs</span>
+                        <span className="text-base font-semibold text-slate-700">{ingredient.carbs}g</span>
                       </div>
-                      <div className="nutrition-item">
-                        <span className="label">Fats</span>
-                        <span className="value">{ingredient.fats}g</span>
+                      <div className="flex flex-col items-center bg-gray-200 p-2.5 rounded-md">
+                        <span className="text-xs text-gray-500 uppercase">Fats</span>
+                        <span className="text-base font-semibold text-slate-700">{ingredient.fats}g</span>
                       </div>
                     </div>
                   </div>
-                  <div className="action-buttons">
+                  <div className="flex gap-2.5">
                     <button 
-                      className="approve-btn"
+                      className="flex-1 py-2.5 px-4 border-none rounded-md text-sm font-medium cursor-pointer transition-colors bg-green-600 text-white hover:bg-green-700"
                       onClick={() => handleApprove(ingredient.id)}
                     >
                       ✓ Approve
                     </button>
                     <button 
-                      className="reject-btn"
+                      className="flex-1 py-2.5 px-4 border-none rounded-md text-sm font-medium cursor-pointer transition-colors bg-red-500 text-white hover:bg-red-600"
                       onClick={() => handleReject(ingredient.id)}
                     >
                       ✕ Reject
@@ -100,24 +108,24 @@ const NutritionistPage: React.FC = () => {
           )}
         </div>
 
-        <div className="section history-section">
-          <h2>All Ingredients</h2>
+        <div className="bg-white rounded-xl p-6 shadow-md border-t-4 border-blue-500">
+          <h2 className="mb-5 text-slate-600 text-xl font-semibold">All Ingredients</h2>
           {allIngredients.length === 0 ? (
-            <p className="no-data">No ingredients in the system.</p>
+            <p className="text-gray-400 text-center py-8">No ingredients in the system.</p>
           ) : (
-            <div className="ingredients-list">
+            <div className="flex flex-col gap-4 max-h-[600px] overflow-y-auto">
               {allIngredients.map(ingredient => (
-                <div key={ingredient.id} className={`ingredient-card ${ingredient.status}`}>
-                  <div className="ingredient-header">
-                    <h3>{ingredient.name}</h3>
+                <div key={ingredient.id} className={`bg-gray-50 rounded-lg p-4 border-l-4 ${getCardBorderColor(ingredient.status)}`}>
+                  <div className="flex justify-between items-center mb-2.5">
+                    <h3 className="m-0 text-slate-700 text-lg">{ingredient.name}</h3>
                     {getStatusBadge(ingredient.status)}
                   </div>
-                  <p className="category">{ingredient.category}</p>
-                  <div className="nutrition-info">
-                    <span>{ingredient.calories} kcal</span>
-                    <span>P: {ingredient.protein}g</span>
-                    <span>C: {ingredient.carbs}g</span>
-                    <span>F: {ingredient.fats}g</span>
+                  <p className="text-gray-500 text-sm m-0 mb-2.5">{ingredient.category}</p>
+                  <div className="flex flex-wrap gap-2.5">
+                    <span className="bg-gray-200 py-1 px-2 rounded text-sm text-gray-600">{ingredient.calories} kcal</span>
+                    <span className="bg-gray-200 py-1 px-2 rounded text-sm text-gray-600">P: {ingredient.protein}g</span>
+                    <span className="bg-gray-200 py-1 px-2 rounded text-sm text-gray-600">C: {ingredient.carbs}g</span>
+                    <span className="bg-gray-200 py-1 px-2 rounded text-sm text-gray-600">F: {ingredient.fats}g</span>
                   </div>
                 </div>
               ))}
