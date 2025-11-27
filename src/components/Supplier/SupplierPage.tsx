@@ -33,7 +33,7 @@ const SupplierPage: React.FC = () => {
     e.preventDefault();
     
     const newIngredient: Ingredient = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       name: formData.name,
       category: formData.category,
       calories: parseFloat(formData.calories) || 0,

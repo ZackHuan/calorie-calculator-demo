@@ -61,6 +61,6 @@ npm run build
 ## Tech Stack
 
 - React 18 with TypeScript
-- React Router v7 for navigation
+- React Router v6 for navigation
 - localStorage for data persistence
 - CSS for styling

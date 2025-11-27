@@ -66,7 +66,7 @@ const RestaurantPage: React.FC = () => {
 
     const totals = calculateTotals();
     const newFood: Food = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       name: foodName,
       ingredients: selectedIngredients,
       totalCalories: Math.round(totals.calories * 10) / 10,
