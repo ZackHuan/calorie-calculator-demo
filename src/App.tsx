@@ -4,14 +4,13 @@ import Navigation from './components/Navigation';
 import SupplierPage from './components/Supplier/SupplierPage';
 import NutritionistPage from './components/Nutritionist/NutritionistPage';
 import RestaurantPage from './components/Restaurant/RestaurantPage';
-import './App.css';
 
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="min-h-screen bg-gray-100">
         <Navigation />
-        <main className="main-content">
+        <main className="p-5">
           <Routes>
             <Route path="/" element={<Navigate to="/supplier" replace />} />
             <Route path="/supplier" element={<SupplierPage />} />
